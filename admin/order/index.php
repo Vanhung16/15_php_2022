@@ -1,14 +1,17 @@
 <?php
-require("../../services/connect.php");
 session_start();
-
+require("../../services/connect.php");
+$sql = "SELECT  users.name, users.email, users.address, products.name, products.image,order_product.quantity,(products.price*(1-products.discount)) 
+as currentPrice, (products.quantity*(products.price*(1-products.discount))) as totalPrice  FROM `products` INNER JOIN order_product ON products.id =
+ order_product.id_product INNER JOIN orders ON orders.id = order_product.id_order INNER JOIN users ON users.id = orders.id_user";
+$result = mysqli_query($connect, $sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
-    <title>Tất cả nhà sản xuất</title>
+    <title>Danh sách đơn hàng</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
     <meta content="Coderthemes" name="author" />
@@ -23,8 +26,6 @@ session_start();
     <link href="../../assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="../../assets/css/app-creative.min.css" rel="stylesheet" type="text/css" id="light-style" />
     <link href="../../assets/css/app-creative-dark.min.css" rel="stylesheet" type="text/css" id="dark-style" />
-    <script script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js">
-    </script>
 
 </head>
 
@@ -57,9 +58,7 @@ session_start();
             <div class="h-100" id="left-side-menu-container" data-simplebar>
 
                 <!--- Sidemenu -->
-                <?php
-                include("../../components/sidemenu.php");
-                ?>
+                <?php include("../../components/sidemenu.php"); ?>
                 <div class="clearfix"></div>
 
             </div>
@@ -322,15 +321,70 @@ session_start();
                         <i class="mdi mdi-menu"></i>
                     </button>
                     <div class="app-search dropdown d-none d-lg-block">
-                        <form action="timkiem.php" method="post">
+                        <form>
                             <div class="input-group">
-                                <input type="text" name="txtSearch" class="form-control dropdown-toggle" placeholder="Tìm kiếm..." id="top-search">
+                                <input type="text" class="form-control dropdown-toggle" placeholder="Tìm kiếm..." id="top-search">
                                 <span class="mdi mdi-magnify search-icon"></span>
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="submit">Tìm kiếm</button>
                                 </div>
                             </div>
+
                         </form>
+
+                        <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
+                            <!-- item-->
+                            <div class="dropdown-header noti-title">
+                                <h5 class="text-overflow mb-2">Found <span class="text-danger">17</span> results</h5>
+                            </div>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <i class="uil-notes font-16 mr-1"></i>
+                                <span>Analytics Report</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <i class="uil-life-ring font-16 mr-1"></i>
+                                <span>How can I help you?</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <i class="uil-cog font-16 mr-1"></i>
+                                <span>User profile settings</span>
+                            </a>
+
+                            <!-- item-->
+                            <div class="dropdown-header noti-title">
+                                <h6 class="text-overflow mb-2 text-uppercase">Users</h6>
+                            </div>
+
+                            <div class="notification-list">
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <div class="media">
+                                        <img class="d-flex mr-2 rounded-circle" src="../assets/images/users/avatar-2.jpg" alt="Generic placeholder image" height="32">
+                                        <div class="media-body">
+                                            <h5 class="m-0 font-14">Erwin Brown</h5>
+                                            <span class="font-12 mb-0">UI Designer</span>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <div class="media">
+                                        <img class="d-flex mr-2 rounded-circle" src="../assets/images/users/avatar-5.jpg" alt="Generic placeholder image" height="32">
+                                        <div class="media-body">
+                                            <h5 class="m-0 font-14">Jacob Deo</h5>
+                                            <span class="font-12 mb-0">Developer</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- end Topbar -->
@@ -342,100 +396,118 @@ session_start();
                     <div class="row">
                         <div class="col-12">
                             <div class="page-title-box">
-                                <h4 class="page-title">Tất cả sản phẩm</h4>
+                                <div class="page-title-right">
+                                </div>
+                                <h4 class="page-title">Danh sách đơn hàng</h4>
                             </div>
                         </div>
                     </div>
+
                     <!-- end page title -->
                     <div class="row justify-content-center">
-                        <table class="table table-striped table-centered mb-0" style="text-align:center">
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Mã Danh Mục</th>
-                                    <th>Mã Nhà Sản Xuất</th>
-                                    <th>Tên Sản Phẩm</th>
-                                    <th>Hình Ảnh</th>
-                                    <th>Giá</th>
-                                    <th>Giảm giá</th>
-                                    <th>Số Lượng</th>
-                                    <th>Sửa</th>
-                                    <th>Xóa</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $sql = "SELECT * FROM products";
-                                $rs = mysqli_query($connect, $sql);
-                                $count = 0;
-                                while ($r = mysqli_fetch_assoc($rs)) {
-                                    $count++;
-                                ?>
+                        <div class="col-xl-10 col-lg-10 ">
+                            <table class="table table-striped table-centered mb-0">
+                                <thead>
                                     <tr>
-                                        <td><?= $count ?></td>
-                                        <td><?= $r['id_category'] ?></td>
-                                        <td><?= $r['id_manufacturer'] ?></td>
-                                        <td><?= $r['name'] ?></td>
-                                        <td><img src="<?= $r['image'] ?>" alt="" style="width: 100px"></td>
-                                        <td><?= number_format($r['price']) ?></td>
-                                        <td><?= $r['discount'] ?>%</td>
-                                        <td><?= $r['quantity'] ?></td>
-                                        <td>
-                                            <a href="edit_product.php?id=<?= $r['id'] ?>">
-                                                <button class="btn btn-warning" style="margin-top:2px;">Sửa</button>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-danger" onclick="xoa(<?= $r['id'] ?>)">Xóa</button>
-
-                                        </td>
+                                        <th>STT</th>
+                                        <th>Tên khách hàng </th>
+                                        <th>Email</th>
+                                        <th>Địa chỉ nhận hàng</th>
+                                        <th>Tên hàng</th>
+                                        <th></th>
+                                        <th>Số lượng</th>
+                                        <th>Đơn giá</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Repair</th>
+                                        <th>Delete</th>
                                     </tr>
-                                <?php
-                                }
-                                ?>
-                            </tbody>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $count = 0;
+                                    foreach ($result as $each) {
+                                        $count++;
+                                    ?>
+                                        <tr>
+                                            <td><?php echo $count ?></td>
+                                            <td><?php echo $each['users.name'] ?></td>
+                                            <td><?php echo $each['users.email'] ?></td>
+                                            <td><?php echo $each['users.address'] ?></td>
+                                            <td>
+                                                <?php echo $each['products.name'] ?>
+                                            </td>
+                                            <td>
+                                                <img src=" <?php echo $each['products.image'] ?>" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="product">
+                                            </td>
+                                            <td>
+                                                <?php echo $each['products.quantity'] ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $each['currentPrice'] ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $each['totalPrice'] ?>
+                                            </td>
+                                            <td>
+                                                <a href="./edit_customer.php?id=<?php echo $each['id'] ?>" class="btn btn-outline-warning">Repair</a>
+                                            </td>
+                                            <td>
+                                                <button onclick="remove(<?php echo $each['id'] ?>)" class="btn btn-outline-danger">Delete</button>
+                                            </td>
+                                        </tr>
 
-                        </table>
-                        <form action="remove_product.php" method="post" id="xoa">
-                            <input type="hidden" id="id" name="id">
-                        </form>
+                                    <?php } ?>
+
+                                </tbody>
+                            </table>
+                            <form action="../customer/delete_customer.php" method="POST" id="delete">
+                                <input type="hidden" name="id" id="idCustomer">
+                            </form>
+                        </div>
                     </div>
-                    <script>
-                        function xoa(id) {
-                            document.getElementById('id').value = id;
-                            var form = document.getElementById('xoa');
-                            swal({
-                                    title: "Bạn chắc chắn?",
-                                    text: "Khi đã xóa, bạn sẽ không thể lấy lại được bản ghi!",
-                                    icon: "warning",
-                                    buttons: true,
-                                    dangerMode: true,
-                                })
-                                .then((willDelete) => {
-                                    if (willDelete) {
-                                        form.submit();
-                                        swal("Bạn đã xóa một bản ghi! " + id, {
-                                            icon: "success",
-                                        });
-
-                                    } else {
-                                        swal("Bản ghi an toàn!");
-                                    }
-                                });
-                        }
-
-                        <?php
-                        if ($_SESSION['success'] == "Thêm thành công") { ?>
-                            swal("Success", "Thêm sản phẩm thành công", "success");
-                        <?php
-                        } else if ($_SESSION['success'] == "Sửa thành công") {
-                        ?>
-                            swal("Success", "Sửa sản phẩm thành công", "success");
-
-                        <?php } ?>
-                    </script>
                 </div>
+                <script>
+                    function remove(id) {
+                        document.getElementById('idCustomer').value = id;
+                        var form = document.getElementById('delete');
+
+                        swal({
+                                title: "Bạn chắc chắn?",
+                                text: "Khi đã xóa, bạn sẽ không thể lấy lại được bản ghi!",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            })
+                            .then((willDelete) => {
+                                if (willDelete) {
+                                    form.submit();
+                                    swal("Bạn đã xóa một bản ghi! " + id, {
+                                        icon: "success",
+                                    });
+
+                                } else {
+                                    swal("Bản ghi an toàn!");
+                                }
+                            });
+                    }
+                </script>
                 <!-- container -->
+                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                <script>
+                    <?php if (isset($_SESSION["success"])) {
+                        if ($_SESSION["success"] == "Thành công") { ?>
+
+                            swal("Success", "Chỉnh sửa thành công", "success");
+                        <?php
+                        }
+                        ?>
+
+
+
+                    <?php
+                        unset($_SESSION["success"]);
+                    } ?>
+                </script>
 
             </div>
             <!-- content -->

@@ -9,7 +9,7 @@ $result = mysqli_query($connect, $sql);
 
 <head>
     <meta charset="utf-8" />
-    <title>Tất cả nhà sản xuất</title>
+    <title>Danh sách khách hàng</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
     <meta content="Coderthemes" name="author" />
@@ -396,7 +396,7 @@ $result = mysqli_query($connect, $sql);
                             <div class="page-title-box">
                                 <div class="page-title-right">
                                 </div>
-                                <h4 class="page-title">Tất cả nhà sản xuất</h4>
+                                <h4 class="page-title">Danh sách khách hàng</h4>
                             </div>
                         </div>
                     </div>
@@ -408,14 +408,14 @@ $result = mysqli_query($connect, $sql);
                                 <thead>
                                     <tr>
                                         <th>STT</th>
-                                        <th>Name </th>
+                                        <th>Tên khách hàng </th>
                                         <th>Email</th>
-                                        <th>Address</th>
-                                        <th>Phone</th>
-                                        <th>Gender</th>
-                                        <th>Avatar</th>
-                                        <th>Repair</th>
-                                        <th>Delete</th>
+                                        <th>Địa chỉ</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Giới tính</th>
+                                        <th>Ảnh đại diện</th>
+                                        <th>Sửa</th>
+                                        <th>Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody>
